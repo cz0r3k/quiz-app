@@ -1,0 +1,13 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Quiz {
+  id: Int!
+  name: String!
+  questions: [String!]!
+}
+
+type Query {
+  quizzes: [Quiz!]!
+}
