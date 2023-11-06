@@ -2,10 +2,21 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+interface Question {
+  id: Int!
+  task: String!
+}
+
 type Quiz {
   id: Int!
   name: String!
-  questions: [String!]!
+  questions: [Question!]!
+}
+
+type PlainTextAnswer implements Question {
+  id: Int!
+  task: String!
+  correctAnswer: String!
 }
 
 type Query {
