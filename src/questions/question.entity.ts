@@ -6,5 +6,6 @@ export abstract class Question {
 
   @Field()
   task: string;
-  //isCorrect: (answer: any) => boolean;
+
+  abstract isCorrect: (answer: any) => boolean;
 }

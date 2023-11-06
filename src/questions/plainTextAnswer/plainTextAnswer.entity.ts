@@ -8,7 +8,6 @@ export class PlainTextAnswer extends Question {
   @Field()
   correctAnswer: string;
 
-  isCorrect(answer: string): boolean {
-    return answer.toLowerCase().replaceAll('/s/g', '') === this.correctAnswer;
-  }
+  isCorrect = (answer: string): boolean =>
+    answer.toLowerCase().replaceAll('/s/g', '') === this.correctAnswer;
 }

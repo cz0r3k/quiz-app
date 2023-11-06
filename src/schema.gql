@@ -19,6 +19,22 @@ type PlainTextAnswer implements Question {
   correctAnswer: String!
 }
 
+type SingleCorrectAnswer implements Question {
+  id: Int!
+  task: String!
+  answers: [String!]!
+  correctAnswer: String!
+}
+
 type Query {
   quizzes: [Quiz!]!
+  quiz(id: Int!): Quiz!
+}
+
+type Mutation {
+  addQuiz(input: QuizInput!): Quiz!
+}
+
+input QuizInput {
+  name: String!
 }

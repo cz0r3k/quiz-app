@@ -10,7 +10,5 @@ export class SingleCorrectAnswer extends Question {
   @Field()
   correctAnswer: string;
 
-  isCorrect(answer: string): boolean {
-    return this.correctAnswer == answer;
-  }
+  isCorrect = (answer: string): boolean => this.correctAnswer == answer;
 }

@@ -9,12 +9,12 @@ export class MultipleCorrectAnswers extends Question {
   answers: string;
   @Field(type => [String])
   correctAnswers: string[];
-  isCorrect(answer: string[]): boolean {
+  isCorrect = (answer: string[]): boolean => {
     const x1 = answer.sort();
     const x2 = this.correctAnswers.sort();
     return (
       answer.length === this.correctAnswers.length &&
       x1.every((x, i) => x === x2[i])
     );
-  }
+  };
 }
