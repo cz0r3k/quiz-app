@@ -14,7 +14,7 @@ export class QuizzesResolver {
   }
 
   @Query((returns) => Quiz)
-  async quiz(@Args('id', { type: () => Int }) id: number) {
+  async quiz(@Args('id', { type: () => Int }) id: number): Promise<Quiz> {
     return this.quizzesService.findById(id);
   }
 
@@ -22,21 +22,17 @@ export class QuizzesResolver {
   async question(
     @Args('quizId', { type: () => Int }) quizId: number,
     @Args('questionId', { type: () => Int }) questionId: number,
-  ) {
+  ): Promise<Question> {
     return (await this.quizzesService.findById(quizId)).getQuestionById(
       questionId,
     );
   }
 
   @Mutation((returns) => Quiz)
-  addQuiz(@Args('input', { type: () => QuizInput }) input: QuizInput): Quiz {
-    const quiz = Object.assign(new Quiz(), {
-      id: this.quizzesService.getId(),
-      name: input.name,
-      questions: <Question[]>[],
-    });
-    this.quizzesService.addQuiz(quiz);
-    return quiz;
+  async addQuiz(
+    @Args('input', { type: () => QuizInput }) input: QuizInput,
+  ): Promise<Quiz> {
+    return this.quizzesService.addQuiz(input);
   }
 
   // @Mutation(returns => Quiz)

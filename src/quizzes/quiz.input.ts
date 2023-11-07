@@ -1,10 +1,10 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { Question } from '../questions/question.entity';
+import { QuestionInput } from '../questions/question.input';
 
 @InputType()
 export class QuizInput {
   @Field()
   name: string;
-  // @Field((type) => [Question], {nullable: true})
-  // questions?: Question[];
+  @Field((type) => [QuestionInput], { nullable: true })
+  questions?: QuestionInput[];
 }

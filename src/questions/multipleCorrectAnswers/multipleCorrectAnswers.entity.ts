@@ -1,13 +1,17 @@
-import { Question } from '../question.entity';
+import { Question, QuestionType } from '../question.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { ChildEntity, Column } from 'typeorm';
 
+@ChildEntity(QuestionType.MULTIPLE)
 @ObjectType({
   implements: Question,
 })
 export class MultipleCorrectAnswers extends Question {
+  @Column('text', { array: true })
   @Field()
   answers: string;
-  @Field(type => [String])
+  @Column('text', { array: true })
+  @Field((type) => [String])
   correctAnswers: string[];
   isCorrect = (answer: string[]): boolean => {
     const x1 = answer.sort();
