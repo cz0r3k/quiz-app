@@ -13,16 +13,10 @@ type Quiz {
   questions: [Question!]!
 }
 
-type Sorting implements Question {
-  id: Int!
-  task: String!
-  order: [String!]!
-}
-
 type MultipleCorrectAnswers implements Question {
   id: Int!
   task: String!
-  answers: String!
+  answers: [String!]!
   correctAnswers: [String!]!
 }
 
@@ -39,6 +33,34 @@ type SingleCorrectAnswer implements Question {
   correctAnswer: String!
 }
 
+type Sorting implements Question {
+  id: Int!
+  task: String!
+  correctAnswers: [String!]!
+}
+
+input PlainTextAnswerInput {
+  task: String!
+  correctAnswer: String!
+}
+
+input SingleCorrectAnswerInput {
+  task: String!
+  answers: [String!]!
+  correctAnswer: String!
+}
+
+input MultipleCorrectAnswersInput {
+  task: String!
+  answers: [String!]!
+  correctAnswers: [String!]!
+}
+
+input SortingInput {
+  task: String!
+  correctAnswers: [String!]!
+}
+
 type Query {
   quizzes: [Quiz!]!
   quiz(id: Int!): Quiz!
@@ -47,6 +69,8 @@ type Query {
 
 type Mutation {
   addQuiz(input: QuizInput!): Quiz!
+  addQuestion(quizId: Int!, question: QuestionConcreteInput!): Quiz!
+  addQuestions(quizId: Int!, questions: [QuestionConcreteInput!]!): Quiz!
 }
 
 input QuizInput {
@@ -56,4 +80,12 @@ input QuizInput {
 
 input QuestionInput {
   task: String!
+}
+
+input QuestionConcreteInput {
+  task: String!
+  answers: [String!]
+  correctAnswers: [String!]
+  answer: String
+  correctAnswer: String
 }

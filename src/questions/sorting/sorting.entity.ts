@@ -9,9 +9,9 @@ import { ChildEntity, Column } from 'typeorm';
 export class Sorting extends Question {
   @Column('text', { array: true })
   @Field((type) => [String])
-  order: string[];
+  correctAnswers: string[];
 
   isCorrect = (answer: [string]): boolean =>
-    answer.length === this.order.length &&
-    answer.every((x, i) => x === this.order[i]);
+    answer.length === this.correctAnswers.length &&
+    answer.every((x, i) => x === this.correctAnswers[i]);
 }

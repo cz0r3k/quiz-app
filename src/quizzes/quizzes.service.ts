@@ -7,6 +7,10 @@ import { Question } from '../questions/question.entity';
 import { SingleCorrectAnswerInput } from '../questions/singleCorrectAnswer/singleCorrectAnswer.input';
 import { QuizInput } from './quiz.input';
 import { Sorting } from '../questions/sorting/sorting.entity';
+import { QuestionInput } from '../questions/question.input';
+import { QuestionConcreteInput } from '../questions/questionConcreteInput';
+import { MultipleCorrectAnswersInput } from '../questions/multipleCorrectAnswers/multipleCorrectAnswers.input';
+import { SortingInput } from '../questions/sorting/sorting.input';
 
 @Injectable()
 export class QuizzesService {
@@ -25,16 +29,28 @@ export class QuizzesService {
     question2.answers = ['6', '8'];
     question2.correctAnswer = '6';
 
-    const question3 = new Sorting();
+    const question3 = new SortingInput();
     question3.task = 'posegreguj liczby';
-    question3.order = ['-1', '1/2', '2', 'e', 'pi'];
+    question3.correctAnswers = ['-1', '1/2', '2', 'e', 'pi'];
 
     const quiz = new QuizInput();
 
     quiz.name = 'Test z matematyki';
-    quiz.questions = [question1, question2, question3];
+    quiz.questions = [question1, question2];
 
-    this.addQuiz(quiz);
+    const question4 = new MultipleCorrectAnswersInput();
+    question4.task = 'Jakie liczby są niewymierne?';
+    question4.answers = ['-1', '1/2', '2', 'e', 'pi'];
+    question4.correctAnswers = ['e', 'pi'];
+
+    const question5 = new SortingInput();
+    question5.task = 'posegreguj liczby';
+    question5.correctAnswers = ['-1', '0', '1'];
+
+    this.addQuiz(quiz).then(() => {
+      this.addQuestion(1, question3);
+      this.addQuestions(1, [question4, question5]);
+    });
   }
   async findAll(): Promise<Quiz[]> {
     return this.quizzesRepository.find({
@@ -65,5 +81,35 @@ export class QuizzesService {
       await Promise.all(promise);
     }
     return this.quizzesRepository.save(quiz);
+  }
+
+  async addQuestion(
+    quizId: number,
+    questionInput: QuestionInput,
+  ): Promise<Quiz> {
+    const question = await this.questionsRepository.save(questionInput);
+    await this.questionsRepository
+      .createQueryBuilder()
+      .relation(Quiz, 'questions')
+      .of(quizId)
+      .add(question.id);
+    return this.findById(quizId);
+  }
+
+  async addQuestions(
+    quizId: number,
+    questionInputs: QuestionInput[],
+  ): Promise<Quiz> {
+    const questions = await this.questionsRepository.save(questionInputs);
+    await this.questionsRepository
+      .createQueryBuilder()
+      .relation(Quiz, 'questions')
+      .of(quizId)
+      .add(
+        questions.map((x) => {
+          return x.id;
+        }),
+      );
+    return this.findById(quizId);
   }
 }

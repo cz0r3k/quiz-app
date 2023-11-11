@@ -8,8 +8,8 @@ import { ChildEntity, Column } from 'typeorm';
 })
 export class MultipleCorrectAnswers extends Question {
   @Column('text', { array: true })
-  @Field()
-  answers: string;
+  @Field((type) => [String])
+  answers: string[];
   @Column('text', { array: true })
   @Field((type) => [String])
   correctAnswers: string[];

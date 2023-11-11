@@ -12,12 +12,28 @@ import { PlainTextAnswer } from './questions/plainTextAnswer/plainTextAnswer.ent
 import { SingleCorrectAnswer } from './questions/singleCorrectAnswer/singleCorrectAnswer.entity';
 import { Sorting } from './questions/sorting/sorting.entity';
 import { Question } from './questions/question.entity';
+import { MultipleCorrectAnswersInput } from './questions/multipleCorrectAnswers/multipleCorrectAnswers.input';
+import { PlainTextAnswerInput } from './questions/plainTextAnswer/plainTextAnswer.input';
+import { SingleCorrectAnswerInput } from './questions/singleCorrectAnswer/singleCorrectAnswer.input';
+import { SortingInput } from './questions/sorting/sorting.input';
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      buildSchemaOptions: {
+        orphanedTypes: [
+          MultipleCorrectAnswers,
+          PlainTextAnswer,
+          SingleCorrectAnswer,
+          Sorting,
+          MultipleCorrectAnswersInput,
+          PlainTextAnswerInput,
+          SingleCorrectAnswerInput,
+          SortingInput,
+        ],
+      },
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',

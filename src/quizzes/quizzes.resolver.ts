@@ -3,6 +3,10 @@ import { QuizzesService } from './quizzes.service';
 import { Quiz } from './quiz.entity';
 import { QuizInput } from './quiz.input';
 import { Question } from '../questions/question.entity';
+import {
+  mapInput,
+  QuestionConcreteInput,
+} from '../questions/questionConcreteInput';
 
 @Resolver((of) => Quiz)
 export class QuizzesResolver {
@@ -35,9 +39,25 @@ export class QuizzesResolver {
     return this.quizzesService.addQuiz(input);
   }
 
-  // @Mutation(returns => Quiz)
-  // addQuestion(@Args('quizId', { type: () => Int }) quizId: number,
-  //             @Args('question', {type: () => QuestionInput}) input: QuestionInput){
-  //
-  // }
+  @Mutation((returns) => Quiz)
+  async addQuestion(
+    @Args('quizId', { type: () => Int }) quizId: number,
+    @Args('question', { type: () => QuestionConcreteInput })
+    input: QuestionConcreteInput,
+  ): Promise<Quiz> {
+    return this.quizzesService.addQuestion(quizId, mapInput(input));
+  }
+  @Mutation((returns) => Quiz)
+  async addQuestions(
+    @Args('quizId', { type: () => Int }) quizId: number,
+    @Args('questions', { type: () => [QuestionConcreteInput] })
+    input: QuestionConcreteInput[],
+  ): Promise<Quiz> {
+    return this.quizzesService.addQuestions(
+      quizId,
+      input.map((x) => {
+        return mapInput(x);
+      }),
+    );
+  }
 }

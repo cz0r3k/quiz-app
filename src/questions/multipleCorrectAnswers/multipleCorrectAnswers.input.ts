@@ -4,8 +4,8 @@ import { QuestionType } from '../question.entity';
 
 @InputType()
 export class MultipleCorrectAnswersInput extends QuestionInput {
-  @Field()
-  answers: string;
+  @Field((type) => [String])
+  answers: string[];
   @Field((type) => [String])
   correctAnswers: string[];
 

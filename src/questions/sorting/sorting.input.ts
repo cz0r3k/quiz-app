@@ -5,7 +5,7 @@ import { QuestionType } from '../question.entity';
 @InputType()
 export class SortingInput extends QuestionInput {
   @Field((type) => [String])
-  order: string[];
+  correctAnswers: string[];
 
   type: QuestionType = QuestionType.SORT;
 }

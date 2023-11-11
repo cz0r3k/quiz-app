@@ -1,7 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
-export class QuestionInput {
+export abstract class QuestionInput {
   @Field()
   task: string;
 }
