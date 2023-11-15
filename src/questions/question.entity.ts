@@ -9,6 +9,8 @@ import {
 } from 'typeorm';
 import { Quiz } from '../quizzes/quiz.entity';
 import { QuestionStudent } from './question.student';
+import { QuestionStudentCheck } from './question.student.check';
+import { QuestionStudentInput } from './question.student.input';
 
 export enum QuestionType {
   MULTIPLE = 'multiple',
@@ -43,8 +45,9 @@ export abstract class Question {
   })
   type: QuestionType;
 
-  abstract isCorrect: (answer: string | string[]) => boolean;
+  abstract isCorrect: (answer: string, answers: string[]) => boolean;
   abstract mapToStudent: () => QuestionStudent;
+  abstract check: (answer: QuestionStudentInput) => QuestionStudentCheck;
 }
 
 export function shuffle(array: string[]): string[] {

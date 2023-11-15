@@ -12,10 +12,25 @@ interface QuestionStudent {
   task: String!
 }
 
+interface QuestionStudentCheck {
+  id: Int!
+  task: String!
+  correct: Boolean!
+}
+
 type QuizStudent {
   id: Int!
   name: String!
   questions: [QuestionStudent!]!
+}
+
+type QuizStudentCheck {
+  id: Int!
+  name: String!
+  questionsNumber: Int!
+  answered: Int!
+  correct: Int!
+  questions: [QuestionStudentCheck!]!
 }
 
 type Quiz {
@@ -31,6 +46,15 @@ type MultipleCorrectAnswersStudent implements QuestionStudent {
   type: String!
 }
 
+type MultipleCorrectAnswersStudentCheck implements QuestionStudentCheck {
+  id: Int!
+  task: String!
+  correct: Boolean!
+  answers: [String!]!
+  studentAnswers: [String!]!
+  correctAnswers: [String!]!
+}
+
 type MultipleCorrectAnswers implements Question {
   id: Int!
   task: String!
@@ -42,6 +66,14 @@ type PlainTextAnswerStudent implements QuestionStudent {
   id: Int!
   task: String!
   type: String!
+}
+
+type PlainTextAnswerStudentCheck implements QuestionStudentCheck {
+  id: Int!
+  task: String!
+  correct: Boolean!
+  studentAnswer: String!
+  correctAnswer: String!
 }
 
 type PlainTextAnswer implements Question {
@@ -57,6 +89,15 @@ type SingleCorrectAnswerStudent implements QuestionStudent {
   type: String!
 }
 
+type SingleCorrectAnswerStudentCheck implements QuestionStudentCheck {
+  id: Int!
+  task: String!
+  correct: Boolean!
+  answers: [String!]!
+  studentAnswer: String!
+  correctAnswer: String!
+}
+
 type SingleCorrectAnswer implements Question {
   id: Int!
   task: String!
@@ -69,6 +110,14 @@ type SortingStudent implements QuestionStudent {
   task: String!
   answers: [String!]!
   type: String!
+}
+
+type SortingStudentCheck implements QuestionStudentCheck {
+  id: Int!
+  task: String!
+  correct: Boolean!
+  studentAnswers: [String!]!
+  correctAnswers: [String!]!
 }
 
 type Sorting implements Question {
@@ -103,6 +152,18 @@ type Query {
   quizzes: [Quiz!]!
   quiz(id: Int!): Quiz!
   quizStudent(id: Int!): QuizStudent!
+  answer(id: Int!, quiz: QuizStudentInput!): QuizStudentCheck!
+}
+
+input QuizStudentInput {
+  id: Int!
+  questions: [QuestionStudentInput!]!
+}
+
+input QuestionStudentInput {
+  id: Int!
+  answers: [String!]
+  answer: String
 }
 
 type Mutation {

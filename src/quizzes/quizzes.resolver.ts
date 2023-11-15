@@ -7,6 +7,8 @@ import {
   QuestionConcreteInput,
 } from '../questions/questionConcreteInput';
 import { QuizStudent } from './quiz.student';
+import { QuizStudentInput } from './quiz.student.input';
+import { QuizStudentCheck } from './quiz.student.check';
 
 @Resolver((of) => Quiz)
 export class QuizzesResolver {
@@ -55,5 +57,14 @@ export class QuizzesResolver {
     @Args('id', { type: () => Int }) id: number,
   ): Promise<QuizStudent> {
     return this.quizzesService.getQuizStudent(id);
+  }
+
+  @Query((returns) => QuizStudentCheck)
+  async answer(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('quiz', { type: () => QuizStudentInput })
+    input: QuizStudentInput,
+  ): Promise<QuizStudent> {
+    return this.quizzesService.answerQuizStudent(id, input);
   }
 }

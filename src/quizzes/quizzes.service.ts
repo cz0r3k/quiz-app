@@ -10,6 +10,8 @@ import { QuestionInput } from '../questions/question.input';
 import { MultipleCorrectAnswersInput } from '../questions/multipleCorrectAnswers/multipleCorrectAnswers.input';
 import { SortingInput } from '../questions/sorting/sorting.input';
 import { QuizStudent } from "./quiz.student";
+import { QuizStudentInput } from "./quiz.student.input";
+import { QuizStudentCheck } from "./quiz.student.check";
 
 @Injectable()
 export class QuizzesService {
@@ -122,5 +124,20 @@ export class QuizzesService {
       },
     });
     return quiz.mapToStudent();
+  }
+
+  async answerQuizStudent(
+    id: number,
+    input: QuizStudentInput,
+  ): Promise<QuizStudentCheck> {
+    const quiz = await this.quizzesRepository.findOne({
+      where: {
+        id: id,
+      },
+      relations: {
+        questions: true,
+      },
+    });
+    return quiz.check(input);
   }
 }
