@@ -1,73 +1,426 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Quiz app
+## Launch
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Run database on  docker
+`docker compose up`
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Run application
+`nest start`
 
-## Description
+GraphQL is on `http://localhost:3000/graphql`
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Example
 
-## Installation
-
-```bash
-$ npm install
+### Add empty quiz
+```graphql
+mutation {
+  addQuiz(input: { name: "Math test" }) {
+    id
+    name
+  }
+}
+```
+```json
+{
+  "data": {
+    "addQuiz": {
+      "id": 1,
+      "name": "Math test"
+    }
+  }
+}
 ```
 
-## Running the app
+### Add questions
+```graphql
+mutation {
+    addQuestions(
+        quizId: 1
+        questions: [
+            { task: "2+2", correctAnswer: "4" }
+            { task: "2+2*2", answers: ["6", "8"], correctAnswer: "6" }
+            { task: "sort numbers", correctAnswers: ["-1", "0", "1"] }
+            {
+                task: "find irrational numbers"
+                answers: ["-1", "1/2", "2", "e", "pi"]
+                correctAnswers: ["e", "pi"]
+            }
+        ]
+    ) {
+        id
+        name
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+        questions {
+            id
+            task
+            ... on PlainTextAnswer {
+                correctAnswer
+            }
+            ... on SingleCorrectAnswer {
+                answers
+                correctAnswer
+            }
+            ... on MultipleCorrectAnswers {
+                answers
+                correctAnswers
+            }
+            ... on Sorting {
+                correctAnswers
+            }
+        }
+    }
+}
+```
+```json
+{
+  "data": {
+    "addQuestions": {
+      "id": 1,
+      "name": "Math test",
+      "questions": [
+        {
+          "id": 1,
+          "task": "find irrational numbers",
+          "answers": [
+            "-1",
+            "1/2",
+            "2",
+            "e",
+            "pi"
+          ],
+          "correctAnswers": [
+            "e",
+            "pi"
+          ]
+        },
+        {
+          "id": 2,
+          "task": "sort numbers",
+          "correctAnswers": [
+            "-1",
+            "0",
+            "1"
+          ]
+        },
+        {
+          "id": 3,
+          "task": "2+2*2",
+          "answers": [
+            "6",
+            "8"
+          ],
+          "correctAnswer": "6"
+        },
+        {
+          "id": 4,
+          "task": "2+2",
+          "correctAnswer": "4"
+        }
+      ]
+    }
+  }
+}
+```
+### Get all quizzes
+```graphql
+{
+    quizzes {
+        id
+        name
+        questions {
+            id
+            task
+            ... on PlainTextAnswer {
+                correctAnswer
+            }
+            ... on SingleCorrectAnswer {
+                answers
+                correctAnswer
+            }
+            ... on Sorting {
+                correctAnswers
+            }
+            ... on MultipleCorrectAnswers {
+                answers
+                correctAnswers
+            }
+        }
+    }
+}
+```
+```json
+{
+  "data": {
+    "quizzes": [
+      {
+        "id": 1,
+        "name": "test z matematyki",
+        "questions": [
+          {
+            "id": 1,
+            "task": "2+2",
+            "correctAnswer": "4"
+          },
+          {
+            "id": 2,
+            "task": "find irrational numbers",
+            "answers": [
+              "-1",
+              "1/2",
+              "2",
+              "e",
+              "pi"
+            ],
+            "correctAnswers": [
+              "e",
+              "pi"
+            ]
+          },
+          {
+            "id": 3,
+            "task": "sort numbers",
+            "correctAnswers": [
+              "-1",
+              "0",
+              "1"
+            ]
+          },
+          {
+            "id": 4,
+            "task": "2+2*2",
+            "answers": [
+              "6",
+              "8"
+            ],
+            "correctAnswer": "6"
+          },
+          {
+            "id": 5,
+            "task": "2+2",
+            "correctAnswer": "4"
+          },
+          {
+            "id": 6,
+            "task": "find irrational numbers",
+            "answers": [
+              "-1",
+              "1/2",
+              "2",
+              "e",
+              "pi"
+            ],
+            "correctAnswers": [
+              "e",
+              "pi"
+            ]
+          },
+          {
+            "id": 7,
+            "task": "sort numbers",
+            "correctAnswers": [
+              "-1",
+              "0",
+              "1"
+            ]
+          },
+          {
+            "id": 8,
+            "task": "2+2*2",
+            "answers": [
+              "6",
+              "8"
+            ],
+            "correctAnswer": "6"
+          },
+          {
+            "id": 9,
+            "task": "2+2",
+            "correctAnswer": "4"
+          },
+          {
+            "id": 10,
+            "task": "2+2",
+            "correctAnswer": "4"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+### Get quiz by student
+```graphql
+{
+   quizStudent(id:1){
+    id
+    name
+     questions{
+       id
+       task
+       ... on PlainTextAnswerStudent{
+         type
+       }
+       ... on SingleCorrectAnswerStudent{
+        type
+         answers
+       }
+       ... on SortingStudent{
+        type
+         answers
+       }
+      ... on MultipleCorrectAnswersStudent{
+        type
+        answers
+      }
+     }
+   }
+}
+```
+```json
+{
+  "data": {
+    "quizStudent": {
+      "id": 1,
+      "name": "Math test",
+      "questions": [
+        {
+          "id": 1,
+          "task": "find irrational numbers",
+          "type": "Multiple Correct Answers",
+          "answers": [
+            "2",
+            "e",
+            "pi",
+            "1/2",
+            "-1"
+          ]
+        },
+        {
+          "id": 2,
+          "task": "sort numbers",
+          "type": "Sorting",
+          "answers": [
+            "-1",
+            "0",
+            "1"
+          ]
+        },
+        {
+          "id": 3,
+          "task": "2+2*2",
+          "type": "Single Correct Answer",
+          "answers": [
+            "6",
+            "8"
+          ]
+        },
+        {
+          "id": 4,
+          "task": "2+2",
+          "type": "Plain Text Answer"
+        }
+      ]
+    }
+  }
+}
 ```
 
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+### Solve quiz
+```graphql
+{
+    answer(
+        id: 1
+        quiz: {
+            id: 1
+            questions: [
+                { id: 1, answers: ["e", "pi", "-1"]}
+                { id: 3, answer: "6" }
+                { id: 4, answer: "4" }
+            ]
+        }
+    ) {
+        id
+        name
+        answered
+        questionsNumber
+        correct
+        questions {
+            id
+            task
+            correct
+            ... on PlainTextAnswerStudentCheck {
+                studentAnswer
+                correctAnswer
+            }
+            ... on SingleCorrectAnswerStudentCheck {
+                studentAnswer
+                answers
+                correctAnswer
+            }
+            ... on SortingStudentCheck {
+                studentAnswers
+                correctAnswers
+            }
+            ... on MultipleCorrectAnswersStudentCheck {
+                answers
+                studentAnswers
+                correctAnswers
+            }
+        }
+    }
+}
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+```json
+{
+  "data": {
+    "answer": {
+      "id": 1,
+      "name": "Math test",
+      "answered": 3,
+      "questionsNumber": 4,
+      "correct": 2,
+      "questions": [
+        {
+          "id": 1,
+          "task": "find irrational numbers",
+          "correct": false,
+          "answers": [
+            "-1",
+            "1/2",
+            "2",
+            "e",
+            "pi"
+          ],
+          "studentAnswers": [
+            "-1",
+            "e",
+            "pi"
+          ],
+          "correctAnswers": [
+            "e",
+            "pi"
+          ]
+        },
+        {
+          "id": 3,
+          "task": "2+2*2",
+          "correct": true,
+          "studentAnswer": "6",
+          "answers": [
+            "6",
+            "8"
+          ],
+          "correctAnswer": "6"
+        },
+        {
+          "id": 4,
+          "task": "2+2",
+          "correct": true,
+          "studentAnswer": "4",
+          "correctAnswer": "4"
+        }
+      ]
+    }
+  }
+}
+```
