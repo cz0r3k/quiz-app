@@ -7,10 +7,28 @@ interface Question {
   task: String!
 }
 
+interface QuestionStudent {
+  id: Int!
+  task: String!
+}
+
+type QuizStudent {
+  id: Int!
+  name: String!
+  questions: [QuestionStudent!]!
+}
+
 type Quiz {
   id: Int!
   name: String!
   questions: [Question!]!
+}
+
+type MultipleCorrectAnswersStudent implements QuestionStudent {
+  id: Int!
+  task: String!
+  answers: [String!]!
+  type: String!
 }
 
 type MultipleCorrectAnswers implements Question {
@@ -20,10 +38,23 @@ type MultipleCorrectAnswers implements Question {
   correctAnswers: [String!]!
 }
 
+type PlainTextAnswerStudent implements QuestionStudent {
+  id: Int!
+  task: String!
+  type: String!
+}
+
 type PlainTextAnswer implements Question {
   id: Int!
   task: String!
   correctAnswer: String!
+}
+
+type SingleCorrectAnswerStudent implements QuestionStudent {
+  id: Int!
+  task: String!
+  answers: [String!]!
+  type: String!
 }
 
 type SingleCorrectAnswer implements Question {
@@ -31,6 +62,13 @@ type SingleCorrectAnswer implements Question {
   task: String!
   answers: [String!]!
   correctAnswer: String!
+}
+
+type SortingStudent implements QuestionStudent {
+  id: Int!
+  task: String!
+  answers: [String!]!
+  type: String!
 }
 
 type Sorting implements Question {
@@ -64,7 +102,7 @@ input SortingInput {
 type Query {
   quizzes: [Quiz!]!
   quiz(id: Int!): Quiz!
-  question(quizId: Int!, questionId: Int!): Question!
+  quizStudent(id: Int!): QuizStudent!
 }
 
 type Mutation {

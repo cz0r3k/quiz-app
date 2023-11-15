@@ -1,6 +1,7 @@
-import { Question, QuestionType } from '../question.entity';
+import { Question, QuestionType, shuffle } from '../question.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { ChildEntity, Column } from 'typeorm';
+import { SortingStudent } from './sorting.student';
 
 @ChildEntity(QuestionType.SORT)
 @ObjectType({
@@ -11,7 +12,15 @@ export class Sorting extends Question {
   @Field((type) => [String])
   correctAnswers: string[];
 
-  isCorrect = (answer: [string]): boolean =>
+  isCorrect = (answer: string[]): boolean =>
     answer.length === this.correctAnswers.length &&
     answer.every((x, i) => x === this.correctAnswers[i]);
+
+  mapToStudent = (): SortingStudent => {
+    const studentQuestion = new SortingStudent();
+    studentQuestion.id = this.id;
+    studentQuestion.task = this.task;
+    studentQuestion.answers = shuffle(this.correctAnswers);
+    return studentQuestion;
+  };
 }

@@ -1,6 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Question } from '../questions/question.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { QuizStudent } from './quiz.student';
 
 @Entity()
 @ObjectType()
@@ -17,7 +18,13 @@ export class Quiz {
   @Field((type) => [Question])
   questions: Question[];
 
-  async getQuestionById(id: number): Promise<Question> {
-    return this.questions.find((x) => x.id == id);
-  }
+  mapToStudent = (): QuizStudent => {
+    const studentQuiz = new QuizStudent();
+    studentQuiz.id = this.id;
+    studentQuiz.name = this.name;
+    studentQuiz.questions = this.questions.map((question) => {
+      return question.mapToStudent();
+    });
+    return studentQuiz;
+  };
 }

@@ -8,6 +8,7 @@ import {
   TableInheritance,
 } from 'typeorm';
 import { Quiz } from '../quizzes/quiz.entity';
+import { QuestionStudent } from './question.student';
 
 export enum QuestionType {
   MULTIPLE = 'multiple',
@@ -42,5 +43,15 @@ export abstract class Question {
   })
   type: QuestionType;
 
-  abstract isCorrect: (answer: any) => boolean;
+  abstract isCorrect: (answer: string | string[]) => boolean;
+  abstract mapToStudent: () => QuestionStudent;
+}
+
+export function shuffle(array: string[]): string[] {
+  const shuffledArray = [...array];
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
 }

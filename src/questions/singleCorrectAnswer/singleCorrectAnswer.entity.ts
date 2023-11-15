@@ -1,6 +1,7 @@
-import { Question, QuestionType } from '../question.entity';
+import { Question, QuestionType, shuffle } from '../question.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { ChildEntity, Column } from 'typeorm';
+import { SingleCorrectAnswerStudent } from './singleCorrectAnswer.student';
 
 @ChildEntity(QuestionType.SINGLE)
 @ObjectType({
@@ -16,4 +17,12 @@ export class SingleCorrectAnswer extends Question {
   correctAnswer: string;
 
   isCorrect = (answer: string): boolean => this.correctAnswer == answer;
+
+  mapToStudent = (): SingleCorrectAnswerStudent => {
+    const studentQuestion = new SingleCorrectAnswerStudent();
+    studentQuestion.id = this.id;
+    studentQuestion.task = this.task;
+    studentQuestion.answers = shuffle(this.answers);
+    return studentQuestion;
+  };
 }

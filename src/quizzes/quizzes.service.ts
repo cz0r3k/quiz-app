@@ -6,11 +6,10 @@ import { Repository } from 'typeorm';
 import { Question } from '../questions/question.entity';
 import { SingleCorrectAnswerInput } from '../questions/singleCorrectAnswer/singleCorrectAnswer.input';
 import { QuizInput } from './quiz.input';
-import { Sorting } from '../questions/sorting/sorting.entity';
 import { QuestionInput } from '../questions/question.input';
-import { QuestionConcreteInput } from '../questions/questionConcreteInput';
 import { MultipleCorrectAnswersInput } from '../questions/multipleCorrectAnswers/multipleCorrectAnswers.input';
 import { SortingInput } from '../questions/sorting/sorting.input';
+import { QuizStudent } from "./quiz.student";
 
 @Injectable()
 export class QuizzesService {
@@ -111,5 +110,17 @@ export class QuizzesService {
         }),
       );
     return this.findById(quizId);
+  }
+
+  async getQuizStudent(id: number): Promise<QuizStudent | null> {
+    const quiz = await this.quizzesRepository.findOne({
+      where: {
+        id: id,
+      },
+      relations: {
+        questions: true,
+      },
+    });
+    return quiz.mapToStudent();
   }
 }
