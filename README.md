@@ -1,6 +1,9 @@
 # Quiz app
 ## Launch
 
+Install packages
+`npm install`
+
 Run database on  docker
 `docker compose up`
 
