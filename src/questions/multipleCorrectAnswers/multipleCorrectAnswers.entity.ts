@@ -2,9 +2,8 @@ import { Question, QuestionType, shuffle } from '../question.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { ChildEntity, Column } from 'typeorm';
 import { MultipleCorrectAnswersStudent } from './multipleCorrectAnswers.student';
-import { QuestionStudentInput } from "../question.student.input";
-import { QuestionStudentCheck } from "../question.student.check";
-import { MultipleCorrectAnswersStudentCheck } from "./multipleCorrectAnswers.student.check";
+import { QuestionStudentInput } from '../question.student.input';
+import { MultipleCorrectAnswersStudentCheck } from './multipleCorrectAnswers.student.check';
 
 @ChildEntity(QuestionType.MULTIPLE)
 @ObjectType({

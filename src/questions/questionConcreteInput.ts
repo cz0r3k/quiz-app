@@ -53,7 +53,7 @@ export function mapInput(input: QuestionConcreteInput): QuestionInput {
       return toMultiple(input);
     case 'answers' in input && 'correctAnswer' in input:
       return toSingle(input);
-    case 'answers' in input:
+    case 'correctAnswer' in input:
       return toPlain(input);
     case 'correctAnswers' in input:
       return toSorting(input);

@@ -126,6 +126,12 @@ type Sorting implements Question {
   correctAnswers: [String!]!
 }
 
+input MultipleCorrectAnswersInput {
+  task: String!
+  answers: [String!]!
+  correctAnswers: [String!]!
+}
+
 input PlainTextAnswerInput {
   task: String!
   correctAnswer: String!
@@ -135,12 +141,6 @@ input SingleCorrectAnswerInput {
   task: String!
   answers: [String!]!
   correctAnswer: String!
-}
-
-input MultipleCorrectAnswersInput {
-  task: String!
-  answers: [String!]!
-  correctAnswers: [String!]!
 }
 
 input SortingInput {
@@ -174,11 +174,7 @@ type Mutation {
 
 input QuizInput {
   name: String!
-  questions: [QuestionInput!]
-}
-
-input QuestionInput {
-  task: String!
+  questions: [QuestionConcreteInput!]
 }
 
 input QuestionConcreteInput {
