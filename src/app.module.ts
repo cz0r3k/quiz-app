@@ -14,9 +14,12 @@ import { MultipleCorrectAnswersInput } from './questions/multipleCorrectAnswers/
 import { PlainTextAnswerInput } from './questions/plainTextAnswer/plainTextAnswer.input';
 import { SingleCorrectAnswerInput } from './questions/singleCorrectAnswer/singleCorrectAnswer.input';
 import { SortingInput } from './questions/sorting/sorting.input';
+import * as process from 'process';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
@@ -35,11 +38,11 @@ import { SortingInput } from './questions/sorting/sorting.input';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'test',
-      password: 'test',
-      database: 'test',
+      host: process.env.HOST_DB,
+      port: parseInt(process.env.PORT_DB, 10),
+      username: process.env.USERNAME_DB,
+      password: process.env.PASSWORD_DB,
+      database: process.env.DATABASE_DB,
       synchronize: true,
       logging: true,
       entities: [
