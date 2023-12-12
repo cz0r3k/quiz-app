@@ -39,6 +39,26 @@ type Quiz {
   questions: [Question!]!
 }
 
+type PlainTextAnswerStudent implements QuestionStudent {
+  id: Int!
+  task: String!
+  type: String!
+}
+
+type PlainTextAnswerStudentCheck implements QuestionStudentCheck {
+  id: Int!
+  task: String!
+  correct: Boolean!
+  studentAnswer: String!
+  correctAnswer: String!
+}
+
+type PlainTextAnswer implements Question {
+  id: Int!
+  task: String!
+  correctAnswer: String!
+}
+
 type MultipleCorrectAnswersStudent implements QuestionStudent {
   id: Int!
   task: String!
@@ -60,26 +80,6 @@ type MultipleCorrectAnswers implements Question {
   task: String!
   answers: [String!]!
   correctAnswers: [String!]!
-}
-
-type PlainTextAnswerStudent implements QuestionStudent {
-  id: Int!
-  task: String!
-  type: String!
-}
-
-type PlainTextAnswerStudentCheck implements QuestionStudentCheck {
-  id: Int!
-  task: String!
-  correct: Boolean!
-  studentAnswer: String!
-  correctAnswer: String!
-}
-
-type PlainTextAnswer implements Question {
-  id: Int!
-  task: String!
-  correctAnswer: String!
 }
 
 type SingleCorrectAnswerStudent implements QuestionStudent {
@@ -126,28 +126,6 @@ type Sorting implements Question {
   correctAnswers: [String!]!
 }
 
-input MultipleCorrectAnswersInput {
-  task: String!
-  answers: [String!]!
-  correctAnswers: [String!]!
-}
-
-input PlainTextAnswerInput {
-  task: String!
-  correctAnswer: String!
-}
-
-input SingleCorrectAnswerInput {
-  task: String!
-  answers: [String!]!
-  correctAnswer: String!
-}
-
-input SortingInput {
-  task: String!
-  correctAnswers: [String!]!
-}
-
 type Query {
   quizzes: [Quiz!]!
   quiz(id: Int!): Quiz!
@@ -168,8 +146,6 @@ input QuestionStudentInput {
 
 type Mutation {
   addQuiz(input: QuizInput!): Quiz!
-  addQuestion(quizId: Int!, question: QuestionConcreteInput!): Quiz!
-  addQuestions(quizId: Int!, questions: [QuestionConcreteInput!]!): Quiz!
 }
 
 input QuizInput {

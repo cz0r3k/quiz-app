@@ -32,7 +32,8 @@ export class Sorting extends Question {
     return studentQuestion;
   };
 
-  check = (answer: QuestionStudentInput): SortingStudentCheck => {
+  check = (answer: QuestionStudentInput): SortingStudentCheck | null => {
+    if (answer.answers == null) return null;
     const studentCheck = new SortingStudentCheck();
     studentCheck.id = this.id;
     studentCheck.task = this.task;

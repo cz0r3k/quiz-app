@@ -1,9 +1,10 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { MultipleCorrectAnswersInput } from './multipleCorrectAnswers/multipleCorrectAnswers.input';
-import { PlainTextAnswerInput } from './plainTextAnswer/plainTextAnswer.input';
-import { SingleCorrectAnswerInput } from './singleCorrectAnswer/singleCorrectAnswer.input';
-import { SortingInput } from './sorting/sorting.input';
 import { QuestionInput } from './question.input';
+import { Question } from './question.entity';
+import { PlainTextAnswer } from './plainTextAnswer/plainTextAnswer.entity';
+import { MultipleCorrectAnswers } from './multipleCorrectAnswers/multipleCorrectAnswers.entity';
+import { SingleCorrectAnswer } from './singleCorrectAnswer/singleCorrectAnswer.entity';
+import { Sorting } from './sorting/sorting.entity';
 
 @InputType()
 export class QuestionConcreteInput extends QuestionInput {
@@ -17,37 +18,36 @@ export class QuestionConcreteInput extends QuestionInput {
   correctAnswer?: string;
 }
 
-function toMultiple(input: QuestionConcreteInput): MultipleCorrectAnswersInput {
-  const multiple: MultipleCorrectAnswersInput =
-    new MultipleCorrectAnswersInput();
+function toMultiple(input: QuestionConcreteInput): MultipleCorrectAnswers {
+  const multiple: MultipleCorrectAnswers = new MultipleCorrectAnswers();
   multiple.answers = input.answers;
   multiple.correctAnswers = input.correctAnswers;
   multiple.task = input.task;
   return multiple;
 }
-function toSingle(input: QuestionConcreteInput): SingleCorrectAnswerInput {
-  const single: SingleCorrectAnswerInput = new SingleCorrectAnswerInput();
+function toSingle(input: QuestionConcreteInput): SingleCorrectAnswer {
+  const single: SingleCorrectAnswer = new SingleCorrectAnswer();
   single.answers = input.answers;
   single.correctAnswer = input.correctAnswer;
   single.task = input.task;
   return single;
 }
 
-function toSorting(input: QuestionConcreteInput): SortingInput {
-  const sorting: SortingInput = new SortingInput();
+function toSorting(input: QuestionConcreteInput): Sorting {
+  const sorting: Sorting = new Sorting();
   sorting.correctAnswers = input.correctAnswers;
   sorting.task = input.task;
   return sorting;
 }
 
-function toPlain(input: QuestionConcreteInput): PlainTextAnswerInput {
-  const plain: PlainTextAnswerInput = new PlainTextAnswerInput();
+function toPlain(input: QuestionConcreteInput): PlainTextAnswer {
+  const plain: PlainTextAnswer = new PlainTextAnswer();
   plain.correctAnswer = input.correctAnswer;
   plain.task = input.task;
   return plain;
 }
 
-export function mapInput(input: QuestionConcreteInput): QuestionInput {
+export function mapInput(input: QuestionConcreteInput): Question | null {
   switch (true) {
     case 'answers' in input && 'correctAnswers' in input:
       return toMultiple(input);
@@ -57,5 +57,7 @@ export function mapInput(input: QuestionConcreteInput): QuestionInput {
       return toPlain(input);
     case 'correctAnswers' in input:
       return toSorting(input);
+    default:
+      return null;
   }
 }

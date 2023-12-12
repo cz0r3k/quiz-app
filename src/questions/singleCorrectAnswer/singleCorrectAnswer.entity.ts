@@ -34,7 +34,10 @@ export class SingleCorrectAnswer extends Question {
     return studentQuestion;
   };
 
-  check = (answer: QuestionStudentInput): SingleCorrectAnswerStudentCheck => {
+  check = (
+    answer: QuestionStudentInput,
+  ): SingleCorrectAnswerStudentCheck | null => {
+    if (answer.answer == null) return null;
     const studentCheck = new SingleCorrectAnswerStudentCheck();
     studentCheck.id = this.id;
     studentCheck.task = this.task;

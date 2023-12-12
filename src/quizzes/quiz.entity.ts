@@ -38,8 +38,9 @@ export class Quiz {
     const questionCheck: QuestionStudentCheck[] = [];
     this.questions.forEach((question) => {
       const answer = input.questions.find((x) => question.id === x.id);
-      if (answer) {
-        questionCheck.push(question.check(answer));
+      const checked = answer ? question.check(answer) : null;
+      if (checked) {
+        questionCheck.push(checked);
       }
     });
     studentQuiz.questions = questionCheck;

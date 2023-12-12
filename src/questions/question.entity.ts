@@ -4,7 +4,6 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-  RelationId,
   TableInheritance,
 } from 'typeorm';
 import { Quiz } from '../quizzes/quiz.entity';
@@ -33,11 +32,8 @@ export abstract class Question {
   @Field()
   task: string;
 
-  @ManyToOne((type) => Quiz)
+  @ManyToOne((type) => Quiz, (quiz) => quiz.questions)
   quiz: Quiz;
-
-  @RelationId((question: Question) => question.quiz)
-  quizId: number;
 
   @Column({
     type: 'enum',

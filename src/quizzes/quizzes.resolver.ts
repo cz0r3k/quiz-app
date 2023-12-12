@@ -1,11 +1,7 @@
 import { Args, Mutation, Query, Resolver, Int } from '@nestjs/graphql';
 import { QuizzesService } from './quizzes.service';
 import { Quiz } from './quiz.entity';
-import { QuizInput } from './quiz.input';
-import {
-  mapInput,
-  QuestionConcreteInput,
-} from '../questions/questionConcreteInput';
+import { mapToQuiz, QuizInput } from './quiz.input';
 import { QuizStudent } from './quiz.student';
 import { QuizStudentInput } from './quiz.student.input';
 import { QuizStudentCheck } from './quiz.student.check';
@@ -28,30 +24,9 @@ export class QuizzesResolver {
   async addQuiz(
     @Args('input', { type: () => QuizInput }) input: QuizInput,
   ): Promise<Quiz> {
-    return this.quizzesService.addQuiz(input);
+    return this.quizzesService.addQuiz(mapToQuiz(input));
   }
 
-  @Mutation((returns) => Quiz)
-  async addQuestion(
-    @Args('quizId', { type: () => Int }) quizId: number,
-    @Args('question', { type: () => QuestionConcreteInput })
-    input: QuestionConcreteInput,
-  ): Promise<Quiz> {
-    return this.quizzesService.addQuestion(quizId, mapInput(input));
-  }
-  @Mutation((returns) => Quiz)
-  async addQuestions(
-    @Args('quizId', { type: () => Int }) quizId: number,
-    @Args('questions', { type: () => [QuestionConcreteInput] })
-    input: QuestionConcreteInput[],
-  ): Promise<Quiz> {
-    return this.quizzesService.addQuestions(
-      quizId,
-      input.map((x) => {
-        return mapInput(x);
-      }),
-    );
-  }
   @Query((returns) => QuizStudent)
   async quizStudent(
     @Args('id', { type: () => Int }) id: number,

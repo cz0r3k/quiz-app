@@ -14,45 +14,21 @@ GraphQL is on `http://localhost:3000/graphql`
 
 ## Example
 
-### Add empty quiz
+### Add quiz
 ```graphql
 mutation {
-  addQuiz(input: { name: "Math test" }) {
-    id
-    name
-  }
-}
-```
-```json
-{
-  "data": {
-    "addQuiz": {
-      "id": 1,
-      "name": "Math test"
-    }
-  }
-}
-```
-
-### Add questions
-```graphql
-mutation {
-    addQuestions(
-        quizId: 1
-        questions: [
-            { task: "2+2", correctAnswer: "4" }
-            { task: "2+2*2", answers: ["6", "8"], correctAnswer: "6" }
-            { task: "sort numbers", correctAnswers: ["-1", "0", "1"] }
-            {
-                task: "find irrational numbers"
-                answers: ["-1", "1/2", "2", "e", "pi"]
-                correctAnswers: ["e", "pi"]
-            }
-        ]
-    ) {
+    addQuiz(input: { name: "Math test" , questions: [
+        { task: "2+2", correctAnswer: "4" }
+        { task: "2+2*2", answers: ["6", "8"], correctAnswer: "6" }
+        { task: "sort numbers", correctAnswers: ["-1", "0", "1"] }
+        {
+            task: "find irrational numbers"
+            answers: ["-1", "1/2", "2", "e", "pi"]
+            correctAnswers: ["e", "pi"]
+        }
+    ] }) {
         id
         name
-
         questions {
             id
             task
@@ -63,26 +39,50 @@ mutation {
                 answers
                 correctAnswer
             }
-            ... on MultipleCorrectAnswers {
-                answers
+            ... on Sorting {
                 correctAnswers
             }
-            ... on Sorting {
+            ... on MultipleCorrectAnswers {
+                answers
                 correctAnswers
             }
         }
     }
 }
+
 ```
 ```json
 {
   "data": {
-    "addQuestions": {
+    "addQuiz": {
       "id": 1,
       "name": "Math test",
       "questions": [
         {
           "id": 1,
+          "task": "2+2",
+          "correctAnswer": "4"
+        },
+        {
+          "id": 2,
+          "task": "2+2*2",
+          "answers": [
+            "6",
+            "8"
+          ],
+          "correctAnswer": "6"
+        },
+        {
+          "id": 3,
+          "task": "sort numbers",
+          "correctAnswers": [
+            "-1",
+            "0",
+            "1"
+          ]
+        },
+        {
+          "id": 4,
           "task": "find irrational numbers",
           "answers": [
             "-1",
@@ -95,29 +95,6 @@ mutation {
             "e",
             "pi"
           ]
-        },
-        {
-          "id": 2,
-          "task": "sort numbers",
-          "correctAnswers": [
-            "-1",
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": 3,
-          "task": "2+2*2",
-          "answers": [
-            "6",
-            "8"
-          ],
-          "correctAnswer": "6"
-        },
-        {
-          "id": 4,
-          "task": "2+2",
-          "correctAnswer": "4"
         }
       ]
     }
@@ -157,7 +134,7 @@ mutation {
     "quizzes": [
       {
         "id": 1,
-        "name": "test z matematyki",
+        "name": "Math test",
         "questions": [
           {
             "id": 1,
@@ -166,18 +143,12 @@ mutation {
           },
           {
             "id": 2,
-            "task": "find irrational numbers",
+            "task": "2+2*2",
             "answers": [
-              "-1",
-              "1/2",
-              "2",
-              "e",
-              "pi"
+              "6",
+              "8"
             ],
-            "correctAnswers": [
-              "e",
-              "pi"
-            ]
+            "correctAnswer": "6"
           },
           {
             "id": 3,
@@ -190,20 +161,6 @@ mutation {
           },
           {
             "id": 4,
-            "task": "2+2*2",
-            "answers": [
-              "6",
-              "8"
-            ],
-            "correctAnswer": "6"
-          },
-          {
-            "id": 5,
-            "task": "2+2",
-            "correctAnswer": "4"
-          },
-          {
-            "id": 6,
             "task": "find irrational numbers",
             "answers": [
               "-1",
@@ -216,34 +173,6 @@ mutation {
               "e",
               "pi"
             ]
-          },
-          {
-            "id": 7,
-            "task": "sort numbers",
-            "correctAnswers": [
-              "-1",
-              "0",
-              "1"
-            ]
-          },
-          {
-            "id": 8,
-            "task": "2+2*2",
-            "answers": [
-              "6",
-              "8"
-            ],
-            "correctAnswer": "6"
-          },
-          {
-            "id": 9,
-            "task": "2+2",
-            "correctAnswer": "4"
-          },
-          {
-            "id": 10,
-            "task": "2+2",
-            "correctAnswer": "4"
           }
         ]
       }
@@ -288,28 +217,11 @@ mutation {
       "questions": [
         {
           "id": 1,
-          "task": "find irrational numbers",
-          "type": "Multiple Correct Answers",
-          "answers": [
-            "2",
-            "e",
-            "pi",
-            "1/2",
-            "-1"
-          ]
+          "task": "2+2",
+          "type": "Plain Text Answer"
         },
         {
           "id": 2,
-          "task": "sort numbers",
-          "type": "Sorting",
-          "answers": [
-            "-1",
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": 3,
           "task": "2+2*2",
           "type": "Single Correct Answer",
           "answers": [
@@ -318,9 +230,26 @@ mutation {
           ]
         },
         {
+          "id": 3,
+          "task": "sort numbers",
+          "type": "Sorting",
+          "answers": [
+            "0",
+            "1",
+            "-1"
+          ]
+        },
+        {
           "id": 4,
-          "task": "2+2",
-          "type": "Plain Text Answer"
+          "task": "find irrational numbers",
+          "type": "Multiple Correct Answers",
+          "answers": [
+            "1/2",
+            "pi",
+            "-1",
+            "2",
+            "e"
+          ]
         }
       ]
     }
@@ -336,9 +265,9 @@ mutation {
         quiz: {
             id: 1
             questions: [
-                { id: 1, answers: ["e", "pi", "-1"]}
-                { id: 3, answer: "6" }
-                { id: 4, answer: "4" }
+                { id: 4, answers: ["e", "pi", "-1"]}
+                { id: 2, answer: "6" }
+                { id: 1, answer: "4" }
             ]
         }
     ) {
@@ -372,6 +301,7 @@ mutation {
         }
     }
 }
+
 ```
 ```json
 {
@@ -385,6 +315,24 @@ mutation {
       "questions": [
         {
           "id": 1,
+          "task": "2+2",
+          "correct": true,
+          "studentAnswer": "4",
+          "correctAnswer": "4"
+        },
+        {
+          "id": 2,
+          "task": "2+2*2",
+          "correct": true,
+          "studentAnswer": "6",
+          "answers": [
+            "6",
+            "8"
+          ],
+          "correctAnswer": "6"
+        },
+        {
+          "id": 4,
           "task": "find irrational numbers",
           "correct": false,
           "answers": [
@@ -403,24 +351,6 @@ mutation {
             "e",
             "pi"
           ]
-        },
-        {
-          "id": 3,
-          "task": "2+2*2",
-          "correct": true,
-          "studentAnswer": "6",
-          "answers": [
-            "6",
-            "8"
-          ],
-          "correctAnswer": "6"
-        },
-        {
-          "id": 4,
-          "task": "2+2",
-          "correct": true,
-          "studentAnswer": "4",
-          "correctAnswer": "4"
         }
       ]
     }

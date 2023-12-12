@@ -3,8 +3,6 @@ import { Quiz } from './quiz.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Question } from '../questions/question.entity';
-import { QuizInput } from './quiz.input';
-import { QuestionInput } from '../questions/question.input';
 import { QuizStudent } from './quiz.student';
 import { QuizStudentInput } from './quiz.student.input';
 import { QuizStudentCheck } from './quiz.student.check';
@@ -35,39 +33,11 @@ export class QuizzesService {
       },
     });
   }
-  async addQuiz(quiz: QuizInput): Promise<Quiz> {
-    quiz.questions = [];
+  async addQuiz(quiz: Quiz): Promise<Quiz> {
+    for (const question of quiz.questions) {
+      await this.questionsRepository.save(question);
+    }
     return this.quizzesRepository.save(quiz);
-  }
-
-  async addQuestion(
-    quizId: number,
-    questionInput: QuestionInput,
-  ): Promise<Quiz> {
-    const question = await this.questionsRepository.save(questionInput);
-    await this.questionsRepository
-      .createQueryBuilder()
-      .relation(Quiz, 'questions')
-      .of(quizId)
-      .add(question.id);
-    return this.findById(quizId);
-  }
-
-  async addQuestions(
-    quizId: number,
-    questionInputs: QuestionInput[],
-  ): Promise<Quiz> {
-    const questions = await this.questionsRepository.save(questionInputs);
-    await this.questionsRepository
-      .createQueryBuilder()
-      .relation(Quiz, 'questions')
-      .of(quizId)
-      .add(
-        questions.map((x) => {
-          return x.id;
-        }),
-      );
-    return this.findById(quizId);
   }
 
   async getQuizStudent(id: number): Promise<QuizStudent | null> {

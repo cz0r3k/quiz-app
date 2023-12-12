@@ -39,7 +39,8 @@ export class MultipleCorrectAnswers extends Question {
 
   check = (
     answer: QuestionStudentInput,
-  ): MultipleCorrectAnswersStudentCheck => {
+  ): MultipleCorrectAnswersStudentCheck | null => {
+    if (answer.answers == null) return null;
     const studentCheck = new MultipleCorrectAnswersStudentCheck();
     studentCheck.id = this.id;
     studentCheck.task = this.task;

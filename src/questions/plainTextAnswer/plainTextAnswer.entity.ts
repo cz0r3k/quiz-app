@@ -31,7 +31,10 @@ export class PlainTextAnswer extends Question {
     return studentQuestion;
   };
 
-  check = (answer: QuestionStudentInput): PlainTextAnswerStudentCheck => {
+  check = (
+    answer: QuestionStudentInput,
+  ): PlainTextAnswerStudentCheck | null => {
+    if (answer.answer == null) return null;
     const studentCheck = new PlainTextAnswerStudentCheck();
     studentCheck.id = this.id;
     studentCheck.task = this.task;
